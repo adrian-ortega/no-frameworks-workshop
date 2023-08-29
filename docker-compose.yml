@@ -1,0 +1,32 @@
+# Docs:
+# https://docs.docker.com/compose/compose-file/
+#
+# Followed this for setup:
+# https://blog.devsense.com/2019/php-nginx-docker
+#
+version: "3"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - "8080:80"
+      - "9001:9001"
+    networks:
+      - internal
+    volumes:
+      - ./src/:/var/www/html/
+      - ./logs/nginx:/var/log/nginx/
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    networks:
+      - internal
+    volumes:
+      - ./src/:/var/www/html/
+      - ./logs/php.log:/var/log/fpm-php.www.log
+networks:
+  internal:
+    driver: bridge
